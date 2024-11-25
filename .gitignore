@@ -1,0 +1,31 @@
+# Excluir qualquer diretório chamado 'aws' em qualquer nível
+**/aws/**
+
+# Diretórios locais do .terraform
+*.terraform*
+
+# Arquivos .tfstate
+*.tfstate
+*.tfstate.*
+
+# Arquivos de log de crash
+crash.log
+crash.*.log
+
+# Excluir todos os arquivos .tfvars que podem conter dados sensíveis
+*.tfvars
+*.tfvars.json
+
+# Ignorar arquivos de override
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignorar arquivos de lock temporários criados pelo terraform apply
+.terraform.tfstate.lock.info
+
+# Ignorar arquivos de configuração CLI
+.terraformrc
+terraform.rc
+*.terraform.lock.hcl*
