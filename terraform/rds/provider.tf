@@ -1,29 +1,15 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.0"
-    }
-  }
+data "terraform_remote_state" "network" {
+  backend = "remote"
 
-  backend "remote" {
+  config = {
     hostname     = "app.terraform.io"
     organization = "ACG-Terraform-Labs-Teste"
-
-    workspaces {
-      name = "techchallenge-database"
+    workspaces = {
+      name = "lab-migrate-state"
     }
   }
-
-#       backend "local" {
-#     path = "/home/darlei/Documents/tfstate/rds/terraform.tfstate"
-#   }
-# }
-
 }
 
-provider "aws" {
-  region     = "us-east-1"
-  access_key = 
-  secret_key = 
+output "vpc_id" {
+  value = data.terraform_remote_state.network.outputs.vpc_id
 }
