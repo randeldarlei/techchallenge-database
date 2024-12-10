@@ -1,0 +1,43 @@
+name: Terraform Apply/Destroy
+
+on:
+  workflow_dispatch:
+    inputs:
+      module:
+        description: "Escolha o módulo para aplicar o Terraform"
+        required: true
+        type: choice
+        options:
+          - rds
+      action:
+        description: "Escolha a ação (apply ou destroy)"
+        required: true
+        type: choice
+        options:
+          - apply
+          - destroy
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure Terraform Authentication
+        env:
+          HASHICORP_TOKEN: ${{ secrets.HASHICORP_TOKEN }}
+        run: |
+          mkdir -p ~/.terraform.d
+          echo "{\"credentials\":{\"app.terraform.io\":{\"token\":\"$HASHICORP_TOKEN\"}}}" > ~/.terraform.d/credentials.tfrc.json
+
+      - name: Terraform Init and Apply/Destroy
+        working-directory: terraform/${{ github.event.inputs.module }}
+        run: |
+          terraform init
+          if [ "${{ github.event.inputs.action }}" == "apply" ]; then
+            terraform apply -auto-approve
+          else
+            terraform destroy -auto-approve
+          fi
