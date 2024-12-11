@@ -3,7 +3,7 @@ resource "aws_db_instance" "techchallenge-rds" {
   engine                   = "postgres"
   engine_version           = "16.1"
   identifier               = "techchallenge-rds"
-  instance_class           = "db.t3.micro"
+  instance_class           = "db.t2.micro"
   storage_encrypted        = false
   publicly_accessible      = false
   delete_automated_backups = true
