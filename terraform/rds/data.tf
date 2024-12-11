@@ -13,3 +13,7 @@ data "terraform_remote_state" "network" {
 output "vpc_id" {
   value = data.terraform_remote_state.network.outputs.vpc_id
 }
+
+output "vpc_id" {
+  value = data.terraform_remote_state.network.private_subnet_ids
+}
