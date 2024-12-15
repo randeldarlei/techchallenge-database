@@ -1,43 +1,54 @@
-name: Terraform Apply/Destroy
+name: Terraform Create RDS
 
 on:
-  workflow_dispatch:
-    inputs:
-      module:
-        description: "Escolha o módulo para aplicar o Terraform"
-        required: true
-        type: choice
-        options:
-          - rds
-      action:
-        description: "Escolha a ação (apply ou destroy)"
-        required: true
-        type: choice
-        options:
-          - apply
-          - destroy
+  push:
+    branches:
+      - feature-github-action
 
 jobs:
-  terraform:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      # 1. Fazer checkout do código do repositório
+      - name: Checkout código
         uses: actions/checkout@v3
 
-      - name: Configure Terraform Authentication
-        env:
-          HASHICORP_TOKEN: ${{ secrets.HASHICORP_TOKEN }}
-        run: |
-          mkdir -p ~/.terraform.d
-          echo "{\"credentials\":{\"app.terraform.io\":{\"token\":\"$HASHICORP_TOKEN\"}}}" > ~/.terraform.d/credentials.tfrc.json
+      # 2. Configurar as credenciais AWS
+      - name: Configurar AWS CLI
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
 
-      - name: Terraform Init and Apply/Destroy
-        working-directory: terraform/${{ github.event.inputs.module }}
-        run: |
-          terraform init
-          if [ "${{ github.event.inputs.action }}" == "apply" ]; then
-            terraform apply -auto-approve
-          else
-            terraform destroy -auto-approve
-          fi
+      # 3. Instalar Terraform
+      - name: Instalar Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      # 4. Navegar para o diretório Terraform (caso os arquivos estejam em uma subpasta)
+      - name: Alterar diretório para Terraform
+        working-directory: terraform
+        run: pwd
+
+      # 5. Inicializar Terraform
+      - name: Inicializar Terraform
+        working-directory: terraform
+        run: terraform init
+
+      # 6. Validar a configuração do Terraform
+      - name: Validar Terraform
+        working-directory: terraform
+        run: terraform validate
+
+      # 7. Planificar o Terraform
+      - name: Planificar Terraform
+        working-directory: terraform
+        run: terraform plan -out=tfplan
+
+      # 8. Aplicar a configuração do Terraform
+      - name: Aplicar Terraform
+        working-directory: terraform
+        run: terraform apply -auto-approve tfplan
