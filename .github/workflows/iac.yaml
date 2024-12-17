@@ -3,6 +3,13 @@ name: Terraform Apply/Destroy
 on:
   workflow_dispatch:
     inputs:
+      module:
+        description: "Escolha o módulo para aplicar o Terraform"
+        required: true
+        type: choice
+        options:
+          - eks
+          - network
       action:
         description: "Escolha a ação (apply ou destroy)"
         required: true
@@ -10,7 +17,6 @@ on:
         options:
           - apply
           - destroy
-
 jobs:
   terraform:
     runs-on: ubuntu-latest
