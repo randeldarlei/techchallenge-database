@@ -8,8 +8,7 @@ on:
         required: true
         type: choice
         options:
-          - eks
-          - network
+          - rds
       action:
         description: "Escolha a ação (apply ou destroy)"
         required: true
@@ -17,6 +16,7 @@ on:
         options:
           - apply
           - destroy
+          
 jobs:
   terraform:
     runs-on: ubuntu-latest
