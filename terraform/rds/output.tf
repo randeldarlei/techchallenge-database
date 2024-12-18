@@ -1,3 +1,4 @@
 output "rds_endpoint" {
-  value = aws_db_instance.techchallenge-rds.endpoint
+  description = "Endpoint do RDS"
+  value       = aws_db_instance.techchallenge-rds.endpoint
 }
