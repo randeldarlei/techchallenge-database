@@ -20,9 +20,12 @@ resource "aws_db_instance" "techchallenge-rds" {
 
 resource "aws_db_subnet_group" "rds_subnet_group" {
   name       = "rds-subnet-group"
-  subnet_ids = data.terraform_remote_state.network.outputs.public_subnet_ids
+  subnet_ids = [
+    aws_subnet.public_cluster_subnet_1.id,
+    aws_subnet.public_cluster_subnet_2.id
+  ]
 
   tags = {
-    Name = "rds-subnet-group"
+    Name = "RDS Subnet Group"
   }
 }
