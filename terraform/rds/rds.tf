@@ -5,7 +5,7 @@ resource "aws_db_instance" "techchallenge-rds" {
   identifier               = "techchallenge-rds"
   instance_class           = "db.t3.micro"
   storage_encrypted        = false
-  publicly_accessible      = false
+  publicly_accessible      = true
   delete_automated_backups = true
   skip_final_snapshot      = true
   db_name                  = "techchallenge"
