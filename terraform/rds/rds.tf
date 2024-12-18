@@ -16,13 +16,6 @@ resource "aws_db_instance" "techchallenge-rds" {
 
   vpc_security_group_ids = [aws_security_group.allow_tls.id]
   db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name
-}
 
-resource "aws_db_subnet_group" "rds_subnet_group" {
-  name       = "rds-subnet-group"
-  subnet_ids = data.terraform_remote_state.network.outputs.public_subnet_ids
-
-  tags = {
-    Name = "rds-subnet-group"
-  }
+  depends_on = [aws_security_group.allow_tls]
 }
